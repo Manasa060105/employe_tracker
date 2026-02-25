@@ -368,11 +368,24 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="header-left">
-            <h1>🛡️ Admin Dashboard</h1>
+        <div class="header-left" style="display: flex; align-items: center; gap: 0.75rem;">
+            <div
+                style="background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                E</div>
+            <h1 style="color: var(--text-main); letter-spacing: -0.02em;">Employee Tracker <span
+                    style="font-weight: 400; color: var(--text-muted); margin-left: 0.5rem; font-size: 0.875rem; border-left: 1px solid var(--border); padding-left: 0.5rem;">Admin
+                    Portal</span></h1>
         </div>
         <div class="header-right">
-            <a href="{% url 'mark_attendance' %}" class="btn btn-outline">Back to Employee View</a>
+            <a href="{% url 'mark_attendance' %}" class="btn btn-outline" style="gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+                Employee View
+            </a>
         </div>
     </header>
 
@@ -389,6 +402,31 @@
     {% endif %}
 
     <main class="container">
+
+        <!-- Stats Overview -->
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="card" style="margin-bottom: 0; padding: 1.25rem;">
+                <div style="color: var(--text-muted); font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                    Total Employees</div>
+                <div style="font-size: 1.5rem; font-weight: 700;">{{ user_summary|length }}</div>
+            </div>
+            <div class="card" style="margin-bottom: 0; padding: 1.25rem;">
+                <div style="color: var(--text-muted); font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                    Active Records</div>
+                <div style="font-size: 1.5rem; font-weight: 700;">{{ records|length }}</div>
+            </div>
+            <div class="card" style="margin-bottom: 0; padding: 1.25rem;">
+                <div style="color: var(--text-muted); font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                    System Status</div>
+                <div
+                    style="font-size: 1.5rem; font-weight: 700; color: var(--success); display: flex; align-items: center; gap: 0.5rem;">
+                    <span
+                        style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
+                    Online
+                </div>
+            </div>
+        </div>
 
         <!-- Employee Summary -->
         <div class="card">
