@@ -44,3 +44,12 @@ class DailyReport(models.Model):
 
     def __str__(self):
         return f"{self.employee.username} - {self.date}"
+
+
+class GeneratedCredential(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    password = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Credentials for {self.user.username}"

@@ -432,10 +432,51 @@
             </div>
         </div>
 
+        <!-- Recent Credentials (Permanent) -->
+        <div class="card" style="border-left: 4px solid var(--primary);">
+            <div class="card-header" style="margin-bottom: 1rem;">
+                <h2 class="card-title">Generated Employee Credentials</h2>
+                <span class="badge" style="background: #e0e7ff; color: #3730a3;">Saved Permanently</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Generated Password</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cred in recent_creds %}
+                        <tr>
+                            <td><strong>{{ cred.user.username }}</strong></td>
+                            <td><code
+                                    style="background: var(--bg); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem;">{{ cred.password }}</code>
+                            </td>
+                            <td style="color: var(--text-muted); font-size: 0.875rem;">{{ cred.created_at|date:"M d, Y"
+                                }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                No credentials have been generated yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Employee Summary -->
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">Employee Summary Overview</h2>
+                <button class="btn btn-primary"
+                    onclick="document.getElementById('addEmpModal').classList.add('active')">
+                    + Add Employee
+                </button>
             </div>
             <div class="table-responsive">
                 <table>
@@ -658,6 +699,44 @@
         </div>
     </div>
 
+    <!-- ADD EMPLOYEE MODAL -->
+    <div class="modal-overlay" id="addEmpModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('addEmpModal')">&times;</button>
+            <h3 class="modal-title">Add New Employee</h3>
+            <p style="margin-top: -1rem; margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.875rem;">
+                A random password will be generated for the new user.
+            </p>
+
+            <form method="POST" action="{% url 'add_employee' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Username *</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control">
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('addEmpModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Modal toggling
         function closeModal(id) {
@@ -697,9 +776,18 @@
         setTimeout(() => {
             const container = document.getElementById('toastContainer');
             if (container) {
-                container.style.opacity = '0';
-                container.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => container.remove(), 500);
+                if (container.innerHTML.includes("Password:")) {
+                    // if it's a password toast, keep it open for 60 seconds
+                    setTimeout(() => {
+                        container.style.opacity = '0';
+                        container.style.transition = 'opacity 0.5s ease';
+                        setTimeout(() => container.remove(), 500);
+                    }, 60000);
+                } else {
+                    container.style.opacity = '0';
+                    container.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => container.remove(), 500);
+                }
             }
         }, 4000);
     </script>

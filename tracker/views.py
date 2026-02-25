@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 
-from .models import Attendance, DailyReport
+from .models import Attendance, DailyReport, GeneratedCredential
 
 
 # =============================
@@ -132,19 +132,41 @@ def mark_attendance(request):
     })
 
 
-# =============================
-# ✅ REGISTER USER
-# =============================
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("login")
-    else:
-        form = UserCreationForm()
+from django.utils.crypto import get_random_string
 
-    return render(request, "tracker/register.html", {"form": form})
+# =============================
+# ✅ ADD EMPLOYEE
+# =============================
+@staff_member_required
+def add_employee(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, f"Username '{username}' already exists.")
+            return redirect("admin_dashboard")
+            
+        password = get_random_string(length=10)
+        
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name
+        )
+        
+        GeneratedCredential.objects.create(user=user, password=password)
+        
+        messages.success(
+            request, 
+            f"Successfully created employee! Username: {username} | Auto-generated Password: {password}"
+        )
+        
+    return redirect("admin_dashboard")
 
 
 # =============================
@@ -199,6 +221,8 @@ def admin_dashboard(request):
             "half_days": half_days,
             "extra_days": extra_days,
         })
+        
+    recent_creds = GeneratedCredential.objects.select_related('user').order_by('-created_at')
 
     return render(request, "tracker/admin_dashboard.html", {
         "records": records,
@@ -206,6 +230,7 @@ def admin_dashboard(request):
         "employee_filter": employee_filter,
         "start_date": start_date,
         "end_date": end_date,
+        "recent_creds": recent_creds,
     })
 
 
