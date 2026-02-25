@@ -157,7 +157,8 @@ def admin_dashboard(request):
     
     # Filter handling
     employee_filter = request.GET.get('employee', '').strip()
-    date_filter = request.GET.get('date', '').strip()
+    start_date = request.GET.get('start_date', '').strip()
+    end_date = request.GET.get('end_date', '').strip()
 
     # Filter out staff and superusers from logs
     records_query = Attendance.objects.select_related("employee").filter(
@@ -167,8 +168,10 @@ def admin_dashboard(request):
     
     if employee_filter:
         records_query = records_query.filter(employee__username__icontains=employee_filter)
-    if date_filter:
-        records_query = records_query.filter(date=date_filter)
+    if start_date:
+        records_query = records_query.filter(date__gte=start_date)
+    if end_date:
+        records_query = records_query.filter(date__lte=end_date)
 
     records = records_query
 
@@ -201,7 +204,8 @@ def admin_dashboard(request):
         "records": records,
         "user_summary": user_summary,
         "employee_filter": employee_filter,
-        "date_filter": date_filter,
+        "start_date": start_date,
+        "end_date": end_date,
     })
 
 

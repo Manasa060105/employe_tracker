@@ -472,16 +472,20 @@
             </div>
 
             <form method="GET" class="filter-bar">
-                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
                     <label class="form-label">Search Employee</label>
-                    <input type="text" name="employee" class="form-control" value="{{ employee_filter }}"
+                    <input type="text" name="employee" class="form-control" value="{{ request.GET.employee }}"
                         placeholder="Name...">
                 </div>
-                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
-                    <label class="form-label">Filter by Date</label>
-                    <input type="date" name="date" class="form-control" value="{{ date_filter }}">
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 140px;">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
                 </div>
-                <div>
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 140px;">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
                     <button type="submit" class="btn btn-primary" style="height: 38px;">🔍 Filter</button>
                     <a href="{% url 'admin_dashboard' %}" class="btn btn-outline" style="height: 38px;">Clear</a>
                 </div>
