@@ -152,13 +152,18 @@ def register(request):
 # =============================
 @staff_member_required
 def admin_dashboard(request):
-    users = User.objects.all()
+    # Filter out staff and superusers from employee list
+    users = User.objects.filter(is_staff=False, is_superuser=False)
     
     # Filter handling
     employee_filter = request.GET.get('employee', '').strip()
     date_filter = request.GET.get('date', '').strip()
 
-    records_query = Attendance.objects.select_related("employee").order_by("-date")
+    # Filter out staff and superusers from logs
+    records_query = Attendance.objects.select_related("employee").filter(
+        employee__is_staff=False, 
+        employee__is_superuser=False
+    ).order_by("-date")
     
     if employee_filter:
         records_query = records_query.filter(employee__username__icontains=employee_filter)
