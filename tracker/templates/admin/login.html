@@ -1,0 +1,60 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif !important;
+        background: #F9FAFB !important;
+    }
+
+    #header {
+        background: #4F46E5 !important;
+        height: 60px !important;
+        line-height: 60px !important;
+        padding: 0 2rem !important;
+    }
+
+    #branding h1 {
+        font-weight: 700 !important;
+        font-size: 1.25rem !important;
+    }
+
+    .login .submit-row input {
+        background: #4F46E5 !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 10px 20px !important;
+    }
+
+    #content-main {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+        border-radius: 12px !important;
+        border: 1px solid #E5E7EB !important;
+        padding: 2rem !important;
+        background: #fff !important;
+    }
+
+    .form-row {
+        border-bottom: none !important;
+    }
+
+    label {
+        font-weight: 500 !important;
+        color: #111827 !important;
+    }
+
+    input[type=text],
+    input[type=password] {
+        border-radius: 6px !important;
+        border: 1px solid #E5E7EB !important;
+        padding: 8px !important;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">Employee Tracker Admin</h1>
+{% endblock %}
