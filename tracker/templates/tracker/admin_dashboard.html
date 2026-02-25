@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338ca;
+            --success: #22C55E;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 2rem;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background: var(--bg);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            filter: brightness(0.9);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            filter: brightness(0.9);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* TOASTS */
+        .toast-container {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 50;
+        }
+
+        .toast {
+            padding: 1rem;
+            border-radius: 8px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* CARD */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        /* FORMS & FILTERS */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* TABLE */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        th {
+            background-color: var(--bg);
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-present {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-absent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-halfday {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-wfh {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-leave {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            box-shadow: var(--shadow);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* REPORT VIEW MODAL STYLING */
+        .report-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .report-section h4 {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .report-section p {
+            font-size: 0.95rem;
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1>🛡️ Admin Dashboard</h1>
+        </div>
+        <div class="header-right">
+            <a href="{% url 'mark_attendance' %}" class="btn btn-outline">Back to Employee View</a>
+        </div>
+    </header>
+
+    <!-- Toasts -->
+    {% if messages %}
+    <div class="toast-container" id="toastContainer">
+        {% for message in messages %}
+        <div class="toast"
+            style="border-left: 4px solid {% if message.tags == 'success' %}var(--success){% else %}var(--danger){% endif %}">
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="container">
+
+        <!-- Employee Summary -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Employee Summary Overview</h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Total Records</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Half Days</th>
+                            <th>Extra Days Worked</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in user_summary %}
+                        <tr>
+                            <td><strong>{{ user.username }}</strong></td>
+                            <td>{{ user.total }}</td>
+                            <td><span style="color: var(--success); font-weight: 500;">{{ user.present }}</span></td>
+                            <td><span style="color: var(--danger); font-weight: 500;">{{ user.absent }}</span></td>
+                            <td><span style="color: var(--warning); font-weight: 500;">{{ user.half_days }}</span></td>
+                            <td><span style="color: var(--primary); font-weight: 500;">{{ user.extra_days }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- All Attendance Records -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Attendance Logs Directory</h2>
+            </div>
+
+            <form method="GET" class="filter-bar">
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                    <label class="form-label">Search Employee</label>
+                    <input type="text" name="employee" class="form-control" value="{{ employee_filter }}"
+                        placeholder="Name...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                    <label class="form-label">Filter by Date</label>
+                    <input type="date" name="date" class="form-control" value="{{ date_filter }}">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" style="height: 38px;">🔍 Filter</button>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline" style="height: 38px;">Clear</a>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Hours</th>
+                            <th>Extra Days</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td><strong>{{ record.employee.username }}</strong></td>
+                            <td>{{ record.date }}</td>
+                            <td>
+                                {% if record.status == 'Present' %}
+                                <span class="badge badge-present">Present</span>
+                                {% elif record.status == 'Absent' %}
+                                <span class="badge badge-absent">Absent</span>
+                                {% elif record.status == 'Half Day' %}
+                                <span class="badge badge-halfday">Half Day</span>
+                                {% elif record.status == 'WFH' %}
+                                <span class="badge badge-wfh">WFH</span>
+                                {% elif record.status == 'Leave' %}
+                                <span class="badge badge-leave">Leave</span>
+                                {% else %}
+                                <span class="badge">{{ record.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ record.check_in_time|default:'--:' }}</td>
+                            <td>{{ record.check_out_time|default:'--:' }}</td>
+                            <td>{{ record.hours_worked }}</td>
+                            <td>{% if record.extra_days %}✓{% else %}-{% endif %}</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <button type="button" class="btn btn-outline btn-sm shadow-sm"
+                                    onclick="openReportModal('{{ record.employee.username }}', '{{ record.date }}', `{{ record.daily_report.today_actions|escapejs|default:'No data' }}`, `{{ record.daily_report.outcomes|escapejs|default:'No data' }}`, `{{ record.daily_report.weekly_plan|escapejs|default:'No data' }}`, `{{ record.daily_report.dau_metric|escapejs|default:'No data' }}`, `{{ record.daily_report.grades_qa|escapejs|default:'No data' }}`)">👁
+                                    View</button>
+
+                                <button type="button" class="btn btn-primary btn-sm mx-1 shadow-sm"
+                                    onclick="openEditModal('{{ record.id }}', '{{ record.employee.username }}', '{{ record.date }}', '{{ record.status }}', '{{ record.check_in_time|time:'H:i'|default:'' }}', '{{ record.check_out_time|time:'H:i'|default:'' }}', '{{ record.extra_days }}')">✏️
+                                    Edit</button>
+
+                                <button type="button" class="btn btn-danger btn-sm shadow-sm"
+                                    onclick="openDeleteModal('{{ record.id }}', '{{ record.employee.username }}', '{{ record.date }}')">🗑
+                                    Delete</button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                No records found matching the criteria.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- REPORT MODAL -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('reportModal')">&times;</button>
+            <h3 class="modal-title">Daily Report: <span id="reportEmpName" style="color: var(--primary);"></span></h3>
+            <p style="margin-top: -1rem; margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.875rem;"
+                id="reportDate"></p>
+
+            <div class="report-section">
+                <h4>Today's Action Items</h4>
+                <p id="reportActions"></p>
+            </div>
+            <div class="report-section">
+                <h4>Outcomes</h4>
+                <p id="reportOutcomes"></p>
+            </div>
+            <div class="report-section">
+                <h4>Weekly Plan</h4>
+                <p id="reportPlan"></p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <div class="report-section" style="flex: 1;">
+                    <h4>DAU Report</h4>
+                    <p id="reportDau"></p>
+                </div>
+                <div class="report-section" style="flex: 1;">
+                    <h4>Grades QA</h4>
+                    <p id="reportQa"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            <h3 class="modal-title">Edit Attendance: <span id="editEmpName" style="color: var(--primary);"></span></h3>
+            <p style="margin-top: -1rem; margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.875rem;"
+                id="editDate"></p>
+
+            <form method="POST" id="editForm" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select name="status" id="editStatus" class="form-control">
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Half Day">Half Day</option>
+                        <option value="WFH">Work From Home</option>
+                        <option value="Leave">Leave</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Check-in Time</label>
+                        <input type="time" name="check_in_time" id="editCheckIn" class="form-control">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Check-out Time</label>
+                        <input type="time" name="check_out_time" id="editCheckOut" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" name="extra_days" id="editExtraDays"
+                            style="width: 1.2rem; height: 1.2rem; accent-color: var(--primary);">
+                        <span style="font-size: 0.875rem;">Extra Days (Worked on Sunday/Saturday 2nd-half)</span>
+                    </label>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <button class="modal-close" onclick="closeModal('deleteModal')">&times;</button>
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h3 class="modal-title" style="margin-bottom: 0.5rem;">Delete Record?</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Are you sure you want to delete the attendance
+                record for <strong id="deleteEmpName"></strong> on <strong id="deleteDate"></strong>? This action cannot
+                be undone.</p>
+
+            <form method="POST" id="deleteForm" action="">
+                {% csrf_token %}
+                <div style="display: flex; justify-content: center; gap: 1rem;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;"
+                        onclick="closeModal('deleteModal')">Cancel</button>
+                    <button type="submit" class="btn btn-danger" style="flex: 1;">Yes, Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal toggling
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function openReportModal(empName, date, actions, outcomes, plan, dau, qa) {
+            document.getElementById('reportEmpName').textContent = empName;
+            document.getElementById('reportDate').textContent = date;
+            document.getElementById('reportActions').textContent = actions;
+            document.getElementById('reportOutcomes').textContent = outcomes;
+            document.getElementById('reportPlan').textContent = plan;
+            document.getElementById('reportDau').textContent = dau;
+            document.getElementById('reportQa').textContent = qa;
+            document.getElementById('reportModal').classList.add('active');
+        }
+
+        function openEditModal(id, empName, date, status, checkIn, checkOut, extraDays) {
+            document.getElementById('editEmpName').textContent = empName;
+            document.getElementById('editDate').textContent = date;
+            document.getElementById('editStatus').value = status;
+            document.getElementById('editCheckIn').value = checkIn;
+            document.getElementById('editCheckOut').value = checkOut;
+            document.getElementById('editExtraDays').checked = (extraDays === 'True');
+            document.getElementById('editForm').action = `/edit-attendance/${id}/`;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function openDeleteModal(id, empName, date) {
+            document.getElementById('deleteEmpName').textContent = empName;
+            document.getElementById('deleteDate').textContent = date;
+            document.getElementById('deleteForm').action = `/delete-attendance/${id}/`;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        // Hide toasts after 4 seconds
+        setTimeout(() => {
+            const container = document.getElementById('toastContainer');
+            if (container) {
+                container.style.opacity = '0';
+                container.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => container.remove(), 500);
+            }
+        }, 4000);
+    </script>
+</body>
+
+</html>
