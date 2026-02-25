@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,18 +101,37 @@
             background: var(--primary);
             color: white;
         }
+
         .btn-primary:hover:not(:disabled) {
             background: var(--primary-hover);
         }
-        
-        .btn-success { background: var(--success); color: white; }
-        .btn-success:hover:not(:disabled) { filter: brightness(0.9); }
-        
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover:not(:disabled) { filter: brightness(0.9); }
-        
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-warning:hover:not(:disabled) { filter: brightness(0.9); }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            filter: brightness(0.9);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            filter: brightness(0.9);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            filter: brightness(0.9);
+        }
 
         .container {
             max-width: 1200px;
@@ -129,6 +149,7 @@
             gap: 0.5rem;
             z-index: 50;
         }
+
         .toast {
             padding: 1rem;
             border-radius: 8px;
@@ -139,9 +160,17 @@
             gap: 0.5rem;
             animation: slideIn 0.3s ease-out;
         }
+
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* METRICS */
@@ -159,16 +188,29 @@
             box-shadow: var(--shadow-sm);
             border-left: 4px solid var(--border);
         }
-        .metric-card.hours { border-left-color: var(--primary); }
-        .metric-card.absent { border-left-color: var(--danger); }
-        .metric-card.half-days { border-left-color: var(--warning); }
-        .metric-card.extra-days { border-left-color: var(--success); }
+
+        .metric-card.hours {
+            border-left-color: var(--primary);
+        }
+
+        .metric-card.absent {
+            border-left-color: var(--danger);
+        }
+
+        .metric-card.half-days {
+            border-left-color: var(--warning);
+        }
+
+        .metric-card.extra-days {
+            border-left-color: var(--success);
+        }
 
         .metric-title {
             font-size: 0.875rem;
             color: var(--text-muted);
             font-weight: 500;
         }
+
         .metric-value {
             font-size: 1.875rem;
             font-weight: 700;
@@ -182,6 +224,7 @@
             grid-template-columns: 1fr;
             gap: 2rem;
         }
+
         @media (min-width: 900px) {
             .main-grid {
                 grid-template-columns: 1fr 1fr;
@@ -199,6 +242,7 @@
         .card-header {
             margin-bottom: 1.5rem;
         }
+
         .card-title {
             font-size: 1.125rem;
             font-weight: 600;
@@ -208,6 +252,7 @@
         .form-group {
             margin-bottom: 1rem;
         }
+
         .form-label {
             display: block;
             font-size: 0.875rem;
@@ -215,6 +260,7 @@
             margin-bottom: 0.5rem;
             color: var(--text-main);
         }
+
         .form-control {
             width: 100%;
             padding: 0.75rem;
@@ -225,11 +271,13 @@
             font-family: inherit;
             background-color: #fff;
         }
+
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
+
         textarea.form-control {
             resize: vertical;
             min-height: 80px;
@@ -242,6 +290,7 @@
             margin-top: 1rem;
             cursor: pointer;
         }
+
         .checkbox-group input {
             width: 1.2rem;
             height: 1.2rem;
@@ -260,25 +309,31 @@
         .table-responsive {
             overflow-x: auto;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
         }
-        th, td {
+
+        th,
+        td {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
             font-size: 0.875rem;
         }
+
         th {
             background-color: var(--bg);
             font-weight: 600;
             color: var(--text-muted);
             white-space: nowrap;
         }
+
         tr:last-child td {
             border-bottom: none;
         }
+
         tbody tr:hover {
             background-color: #f8fafc;
         }
@@ -291,25 +346,46 @@
             font-size: 0.75rem;
             font-weight: 500;
         }
-        .badge-present { background: #dcfce7; color: #166534; }
-        .badge-absent { background: #fee2e2; color: #991b1b; }
-        .badge-halfday { background: #fef3c7; color: #92400e; }
-        .badge-wfh { background: #e0e7ff; color: #3730a3; }
-        .badge-leave { background: #f3f4f6; color: #374151; }
-        
+
+        .badge-present {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-absent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-halfday {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-wfh {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-leave {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
         .empty-state {
             text-align: center;
             padding: 3rem 1rem;
             color: var(--text-muted);
         }
+
         .empty-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.5;
         }
-
     </style>
 </head>
+
 <body>
 
     <!-- Header -->
@@ -319,12 +395,10 @@
             <p>Welcome, {{ request.user.username }}</p>
         </div>
         <div class="header-right">
-            {% if request.user.is_staff %}
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline">Admin Dashboard</a>
-            {% endif %}
             <form method="post" action="{% url 'logout' %}" style="margin: 0;">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444;">Logout</button>
+                <button type="submit" class="btn btn-outline"
+                    style="border-color: #ef4444; color: #ef4444;">Logout</button>
             </form>
         </div>
     </header>
@@ -333,9 +407,10 @@
     {% if messages %}
     <div class="toast-container" id="toastContainer">
         {% for message in messages %}
-            <div class="toast" style="border-left: 4px solid {% if message.tags == 'success' %}var(--success){% else %}var(--danger){% endif %}">
-                <span>{{ message }}</span>
-            </div>
+        <div class="toast"
+            style="border-left: 4px solid {% if message.tags == 'success' %}var(--success){% else %}var(--danger){% endif %}">
+            <span>{{ message }}</span>
+        </div>
         {% endfor %}
     </div>
     {% endif %}
@@ -345,7 +420,8 @@
         <div class="metrics-grid">
             <div class="metric-card hours">
                 <div class="metric-title">Total Hours Worked</div>
-                <div class="metric-value">{{ total_hours }} <span style="font-size: 1rem; color: var(--text-muted);">hrs</span></div>
+                <div class="metric-value">{{ total_hours }} <span
+                        style="font-size: 1rem; color: var(--text-muted);">hrs</span></div>
             </div>
             <div class="metric-card absent">
                 <div class="metric-title">Days Absent</div>
@@ -362,7 +438,7 @@
         </div>
 
         <div class="main-grid">
-            
+
             <!-- Left Column: Attendance Card -->
             <div>
                 <div class="card">
@@ -374,26 +450,34 @@
                         <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
                             <div class="form-group" style="flex: 1; min-width: 120px;">
                                 <label class="form-label">Check-in Time</label>
-                                <input type="time" class="form-control" name="check_in_time" value="{% if today_attendance and today_attendance.check_in_time %}{{ today_attendance.check_in_time|time:'H:i' }}{% endif %}">
+                                <input type="time" class="form-control" name="check_in_time"
+                                    value="{% if today_attendance and today_attendance.check_in_time %}{{ today_attendance.check_in_time|time:'H:i' }}{% endif %}">
                             </div>
                             <div class="form-group" style="flex: 1; min-width: 120px;">
                                 <label class="form-label">Check-out Time</label>
-                                <input type="time" class="form-control" name="check_out_time" value="{% if today_attendance and today_attendance.check_out_time %}{{ today_attendance.check_out_time|time:'H:i' }}{% endif %}">
+                                <input type="time" class="form-control" name="check_out_time"
+                                    value="{% if today_attendance and today_attendance.check_out_time %}{{ today_attendance.check_out_time|time:'H:i' }}{% endif %}">
                             </div>
                         </div>
 
                         <label class="checkbox-group">
-                            <input type="checkbox" name="extra_days" {% if today_attendance and today_attendance.extra_days %}checked{% endif %}>
-                            <span class="form-label" style="margin: 0;">Extra Days (Worked on Sunday/Saturday 2nd-half)</span>
+                            <input type="checkbox" name="extra_days" {% if today_attendance and
+                                today_attendance.extra_days %}checked{% endif %}>
+                            <span class="form-label" style="margin: 0;">Extra Days (Worked on Sunday/Saturday
+                                2nd-half)</span>
                         </label>
 
                         <div class="actions-group">
                             {% if already_marked %}
-                                <button type="submit" name="status" value="{{ today_attendance.status }}" class="btn btn-primary" style="width: 100%;">Update Attendance</button>
+                            <button type="submit" name="status" value="{{ today_attendance.status }}"
+                                class="btn btn-primary" style="width: 100%;">Update Attendance</button>
                             {% else %}
-                                <button type="submit" name="status" value="Present" class="btn btn-success" style="flex: 1;">Mark Present</button>
-                                <button type="submit" name="status" value="Absent" class="btn btn-danger" style="flex: 1;">Mark Absent</button>
-                                <button type="submit" name="status" value="Half Day" class="btn btn-warning" style="flex: 1;">Mark Half Day</button>
+                            <button type="submit" name="status" value="Present" class="btn btn-success"
+                                style="flex: 1;">Mark Present</button>
+                            <button type="submit" name="status" value="Absent" class="btn btn-danger"
+                                style="flex: 1;">Mark Absent</button>
+                            <button type="submit" name="status" value="Half Day" class="btn btn-warning"
+                                style="flex: 1;">Mark Half Day</button>
                             {% endif %}
                         </div>
                     </form>
@@ -406,36 +490,43 @@
                     <div class="card-header">
                         <h2 class="card-title">Today's Action Items</h2>
                     </div>
-                    <form method="POST" id="dailyReportForm" style="display: flex; flex-direction: column; gap: 1rem; height: calc(100% - 3rem);">
+                    <form method="POST" id="dailyReportForm"
+                        style="display: flex; flex-direction: column; gap: 1rem; height: calc(100% - 3rem);">
                         {% csrf_token %}
                         <div class="form-group">
                             <label class="form-label">Today's Action Items</label>
-                            <textarea name="today_actions" class="form-control auto-expand" rows="3" placeholder="What actionable items are you working on today?">{{ report.today_actions }}</textarea>
+                            <textarea name="today_actions" class="form-control auto-expand" rows="3"
+                                placeholder="What actionable items are you working on today?">{{ report.today_actions }}</textarea>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label">Outcomes</label>
-                            <textarea name="outcomes" class="form-control auto-expand" rows="3" placeholder="What were the outcomes?">{{ report.outcomes }}</textarea>
+                            <textarea name="outcomes" class="form-control auto-expand" rows="3"
+                                placeholder="What were the outcomes?">{{ report.outcomes }}</textarea>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Weekly Plan</label>
-                            <textarea name="weekly_plan" class="form-control auto-expand" rows="3" placeholder="Plan for the rest of the week...">{{ report.weekly_plan }}</textarea>
+                            <textarea name="weekly_plan" class="form-control auto-expand" rows="3"
+                                placeholder="Plan for the rest of the week...">{{ report.weekly_plan }}</textarea>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                             <div class="form-group">
                                 <label class="form-label">DAU Report</label>
-                                <textarea name="dau_metric" class="form-control auto-expand" rows="2">{{ report.dau_metric }}</textarea>
+                                <textarea name="dau_metric" class="form-control auto-expand"
+                                    rows="2">{{ report.dau_metric }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Grades QA</label>
-                                <textarea name="grades_qa" class="form-control auto-expand" rows="2">{{ report.grades_qa }}</textarea>
+                                <textarea name="grades_qa" class="form-control auto-expand"
+                                    rows="2">{{ report.grades_qa }}</textarea>
                             </div>
                         </div>
 
                         <div style="margin-top: auto; padding-top: 1rem;">
-                            <button type="submit" name="save_report" class="btn btn-primary" style="width: 100%;">💾 Save Daily Report</button>
+                            <button type="submit" name="save_report" class="btn btn-primary" style="width: 100%;">💾
+                                Save Daily Report</button>
                         </div>
                     </form>
                 </div>
@@ -466,27 +557,28 @@
                             <td>{{ record.date }}</td>
                             <td>
                                 {% if record.status == 'Present' %}
-                                    <span class="badge badge-present">Present</span>
+                                <span class="badge badge-present">Present</span>
                                 {% elif record.status == 'Absent' %}
-                                    <span class="badge badge-absent">Absent</span>
+                                <span class="badge badge-absent">Absent</span>
                                 {% elif record.status == 'Half Day' %}
-                                    <span class="badge badge-halfday">Half Day</span>
+                                <span class="badge badge-halfday">Half Day</span>
                                 {% elif record.status == 'WFH' %}
-                                    <span class="badge badge-wfh">WFH</span>
+                                <span class="badge badge-wfh">WFH</span>
                                 {% elif record.status == 'Leave' %}
-                                    <span class="badge badge-leave">Leave</span>
+                                <span class="badge badge-leave">Leave</span>
                                 {% else %}
-                                    <span class="badge">{{ record.status }}</span>
+                                <span class="badge">{{ record.status }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ record.check_in_time|default:'--:--' }}</td>
                             <td>{{ record.check_out_time|default:'--:--' }}</td>
-                            <td><strong>{{ record.hours_worked }}</strong> <span style="font-size: 0.75rem; color: var(--text-muted);">hrs</span></td>
+                            <td><strong>{{ record.hours_worked }}</strong> <span
+                                    style="font-size: 0.75rem; color: var(--text-muted);">hrs</span></td>
                             <td>
                                 {% if record.extra_days %}
-                                    <span style="color: var(--success); font-weight: bold;">+1</span>
+                                <span style="color: var(--success); font-weight: bold;">+1</span>
                                 {% else %}
-                                    <span style="color: var(--text-muted);">-</span>
+                                <span style="color: var(--text-muted);">-</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -510,7 +602,7 @@
     <script>
         // Auto-expand textareas
         document.querySelectorAll('textarea.auto-expand').forEach(el => {
-            el.addEventListener('input', function() {
+            el.addEventListener('input', function () {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
@@ -523,7 +615,7 @@
         // Hide toasts after 4 seconds
         setTimeout(() => {
             const container = document.getElementById('toastContainer');
-            if(container) {
+            if (container) {
                 container.style.opacity = '0';
                 container.style.transition = 'opacity 0.5s ease';
                 setTimeout(() => container.remove(), 500);
@@ -531,4 +623,5 @@
         }, 4000);
     </script>
 </body>
+
 </html>

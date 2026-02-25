@@ -25,6 +25,10 @@ def home(request):
 # =============================
 @login_required
 def mark_attendance(request):
+    # Redirect staff members to admin dashboard
+    if request.user.is_staff:
+        return redirect("admin_dashboard")
+
     today = timezone.now().date()
 
     # Get or create today's daily report
