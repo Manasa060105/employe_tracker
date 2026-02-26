@@ -772,9 +772,43 @@
                 const metrics = JSON.parse(metricsJson || '{}');
                 if (Object.keys(metrics).length > 0) {
                     metricsSection.style.display = 'block';
-                    for (const [key, value] of Object.entries(metrics)) {
-                        const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                        metricsDiv.innerHTML += `<div><strong>${formattedKey}:</strong> ${value}</div>`;
+
+                    if (metrics.hasOwnProperty('pu_conversions') || metrics.hasOwnProperty('new_leads')) {
+                        // Growth and Marketing Formatting
+                        metricsDiv.style.gridTemplateColumns = '1fr';
+
+                        let html = '';
+                        if (metrics.new_leads !== undefined) {
+                            html += `<div style="margin-bottom: 0.5rem;"><strong>1. Number of NEW leads:</strong> ${metrics.new_leads}</div>`;
+                        }
+
+                        html += `<div><strong>2. Number of conversions:</strong></div>`;
+                        html += `<div style="padding-left: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">`;
+
+                        if (metrics.pu_conversions !== undefined) html += `<div><span style="color:var(--text-muted)">- For PU College:</span> <strong>${metrics.pu_conversions}</strong></div>`;
+                        if (metrics.lgs_conversions !== undefined) html += `<div><span style="color:var(--text-muted)">- For LGS:</span> <strong>${metrics.lgs_conversions}</strong></div>`;
+                        if (metrics.summer_conversions !== undefined) html += `<div><span style="color:var(--text-muted)">- For Summer Coaching / Internship:</span> <strong>${metrics.summer_conversions}</strong></div>`;
+                        if (metrics.cet_conversions !== undefined) html += `<div><span style="color:var(--text-muted)">- For CET/NEET Crash Course:</span> <strong>${metrics.cet_conversions}</strong></div>`;
+
+                        html += `</div>`;
+                        metricsDiv.innerHTML = html;
+
+                    } else if (metrics.hasOwnProperty('lessons_completed') || metrics.hasOwnProperty('skills_added')) {
+                        // Tech and Development Formatting
+                        metricsDiv.style.gridTemplateColumns = '1fr 1fr';
+                        let html = '';
+                        if (metrics.lessons_completed !== undefined) html += `<div><strong>Lessons completed:</strong> ${metrics.lessons_completed}</div>`;
+                        if (metrics.skills_added !== undefined) html += `<div><strong>Skills added:</strong> ${metrics.skills_added}</div>`;
+                        if (metrics.students_mentored !== undefined) html += `<div><strong>Students mentored:</strong> ${metrics.students_mentored}</div>`;
+                        if (metrics.hours_mentored !== undefined) html += `<div><strong>Hours mentored:</strong> ${metrics.hours_mentored}</div>`;
+                        metricsDiv.innerHTML = html;
+                    } else {
+                        // Fallback
+                        metricsDiv.style.gridTemplateColumns = '1fr 1fr';
+                        for (const [key, value] of Object.entries(metrics)) {
+                            const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                            metricsDiv.innerHTML += `<div><strong>${formattedKey}:</strong> ${value}</div>`;
+                        }
                     }
                 } else {
                     metricsSection.style.display = 'none';
