@@ -33,14 +33,27 @@ class Attendance(models.Model):
         return 0
 
 
+class EmployeeProfile(models.Model):
+    TEAM_CHOICES = [
+        ('Growth and Marketing', 'Growth and Marketing'),
+        ('Tech and Development', 'Tech and Development'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    team = models.CharField(max_length=50, choices=TEAM_CHOICES, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.team}"
+
+
 class DailyReport(models.Model):
     employee = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
-    today_actions = models.TextField()
+    additional_actions = models.TextField(blank=True, default="")
     outcomes = models.TextField()
     weekly_plan = models.TextField()
     dau_metric = models.TextField(blank=True, default="")
     grades_qa = models.TextField(blank=True, default="")
+    team_metrics = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return f"{self.employee.username} - {self.date}"

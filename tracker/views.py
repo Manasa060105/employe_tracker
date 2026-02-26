@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+import json
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
@@ -6,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 
-from .models import Attendance, DailyReport, GeneratedCredential
+from .models import Attendance, DailyReport, GeneratedCredential, EmployeeProfile
 
 
 # =============================
@@ -36,9 +37,10 @@ def mark_attendance(request):
         employee=request.user,
         date=today,
         defaults={
-            "today_actions": "",
+            "additional_actions": "",
             "outcomes": "",
             "weekly_plan": "",
+            "team_metrics": {},
         }
     )
 
@@ -52,11 +54,27 @@ def mark_attendance(request):
 
         # ✅ DAILY REPORT SAVE
         if "save_report" in request.POST:
-            report.today_actions = request.POST.get("today_actions", "")
+            report.additional_actions = request.POST.get("additional_actions", "")
             report.outcomes = request.POST.get("outcomes", "")
             report.weekly_plan = request.POST.get("weekly_plan", "")
             report.dau_metric = request.POST.get("dau_metric", "")
             report.grades_qa = request.POST.get("grades_qa", "")
+
+            user_team = getattr(request.user.profile, 'team', None) if hasattr(request.user, 'profile') else None
+            metrics = {}
+            if user_team == 'Growth and Marketing':
+                metrics['new_leads'] = request.POST.get('new_leads', 0)
+                metrics['pu_conversions'] = request.POST.get('pu_conversions', 0)
+                metrics['lgs_conversions'] = request.POST.get('lgs_conversions', 0)
+                metrics['summer_conversions'] = request.POST.get('summer_conversions', 0)
+                metrics['cet_conversions'] = request.POST.get('cet_conversions', 0)
+            elif user_team == 'Tech and Development':
+                metrics['lessons_completed'] = request.POST.get('lessons_completed', 0)
+                metrics['skills_added'] = request.POST.get('skills_added', 0)
+                metrics['students_mentored'] = request.POST.get('students_mentored', 0)
+                metrics['hours_mentored'] = request.POST.get('hours_mentored', 0)
+
+            report.team_metrics = metrics
             report.save()
 
             messages.success(request, "Daily report saved.")
@@ -120,6 +138,8 @@ def mark_attendance(request):
     half_days = all_records.filter(status="Half Day").count()
     extra_days = all_records.filter(extra_days=True).count()
 
+    user_team = getattr(request.user.profile, 'team', None) if hasattr(request.user, 'profile') else None
+
     return render(request, "tracker/mark_attendance.html", {
         "already_marked": already_marked,
         "records": records,
@@ -129,6 +149,7 @@ def mark_attendance(request):
         "absent_days": absent_days,
         "half_days": half_days,
         "extra_days": extra_days,
+        "user_team": user_team,
     })
 
 
@@ -144,6 +165,7 @@ def add_employee(request):
         email = request.POST.get('email')
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
+        team = request.POST.get('team', '')
         
         if User.objects.filter(username=username).exists():
             messages.error(request, f"Username '{username}' already exists.")
@@ -159,6 +181,7 @@ def add_employee(request):
             last_name=last_name
         )
         
+        EmployeeProfile.objects.create(user=user, team=team if team else None)
         GeneratedCredential.objects.create(user=user, password=password)
         
         messages.success(
@@ -202,7 +225,12 @@ def admin_dashboard(request):
     report_dict = {(r.employee_id, r.date): r for r in reports}
     
     for r in records:
-        r.daily_report = report_dict.get((r.employee_id, r.date))
+        report = report_dict.get((r.employee_id, r.date))
+        if report:
+            report.team_metrics_json = json.dumps(report.team_metrics)
+            r.daily_report = report
+        else:
+            r.daily_report = None
 
     user_summary = []
 
@@ -212,9 +240,11 @@ def admin_dashboard(request):
         absent = Attendance.objects.filter(employee=user, status="Absent").count()
         half_days = Attendance.objects.filter(employee=user, status="Half Day").count()
         extra_days = Attendance.objects.filter(employee=user, extra_days=True).count()
+        team = getattr(user.profile, 'team', 'Unassigned') if hasattr(user, 'profile') else 'Unassigned'
 
         user_summary.append({
             "username": user.username,
+            "team": team,
             "total": total,
             "present": present,
             "absent": absent,

@@ -483,6 +483,7 @@
                     <thead>
                         <tr>
                             <th>Employee</th>
+                            <th>Team</th>
                             <th>Total Records</th>
                             <th>Present</th>
                             <th>Absent</th>
@@ -494,6 +495,8 @@
                         {% for user in user_summary %}
                         <tr>
                             <td><strong>{{ user.username }}</strong></td>
+                            <td><span class="badge" style="background:var(--bg);color:var(--text-muted);">{{ user.team
+                                    }}</span></td>
                             <td>{{ user.total }}</td>
                             <td><span style="color: var(--success); font-weight: 500;">{{ user.present }}</span></td>
                             <td><span style="color: var(--danger); font-weight: 500;">{{ user.absent }}</span></td>
@@ -572,7 +575,7 @@
                             <td>{% if record.extra_days %}✓{% else %}-{% endif %}</td>
                             <td style="text-align: right; white-space: nowrap;">
                                 <button type="button" class="btn btn-outline btn-sm shadow-sm"
-                                    onclick="openReportModal('{{ record.employee.username }}', '{{ record.date }}', `{{ record.daily_report.today_actions|escapejs|default:'No data' }}`, `{{ record.daily_report.outcomes|escapejs|default:'No data' }}`, `{{ record.daily_report.weekly_plan|escapejs|default:'No data' }}`, `{{ record.daily_report.dau_metric|escapejs|default:'No data' }}`, `{{ record.daily_report.grades_qa|escapejs|default:'No data' }}`)">👁
+                                    onclick="openReportModal('{{ record.employee.username }}', '{{ record.date }}', `{{ record.daily_report.additional_actions|escapejs|default:'' }}`, `{{ record.daily_report.team_metrics_json|escapejs|default:'{}' }}`, `{{ record.daily_report.outcomes|escapejs|default:'' }}`, `{{ record.daily_report.weekly_plan|escapejs|default:'' }}`, `{{ record.daily_report.dau_metric|escapejs|default:'' }}`, `{{ record.daily_report.grades_qa|escapejs|default:'' }}`)">👁
                                     View</button>
 
                                 <button type="button" class="btn btn-primary btn-sm mx-1 shadow-sm"
@@ -605,9 +608,15 @@
             <p style="margin-top: -1rem; margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.875rem;"
                 id="reportDate"></p>
 
-            <div class="report-section">
-                <h4>Today's Action Items</h4>
-                <p id="reportActions"></p>
+            <div class="report-section" id="reportMetricsSection" style="display:none;">
+                <h4>Team Metrics</h4>
+                <div id="reportMetrics"
+                    style="background: var(--bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); font-size: 0.95rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                </div>
+            </div>
+            <div class="report-section" id="reportAlsoSection">
+                <h4>Also:</h4>
+                <p id="reportAlso"></p>
             </div>
             <div class="report-section">
                 <h4>Outcomes</h4>
@@ -718,6 +727,14 @@
                     <label class="form-label">Email Address *</label>
                     <input type="email" name="email" class="form-control" required>
                 </div>
+                <div class="form-group">
+                    <label class="form-label">Team</label>
+                    <select name="team" class="form-control">
+                        <option value="">-- No Team (Admin/Other) --</option>
+                        <option value="Growth and Marketing">Growth and Marketing</option>
+                        <option value="Tech and Development">Tech and Development</option>
+                    </select>
+                </div>
                 <div style="display: flex; gap: 1rem;">
                     <div class="form-group" style="flex: 1;">
                         <label class="form-label">First Name</label>
@@ -743,14 +760,42 @@
             document.getElementById(id).classList.remove('active');
         }
 
-        function openReportModal(empName, date, actions, outcomes, plan, dau, qa) {
+        function openReportModal(empName, date, actions, metricsJson, outcomes, plan, dau, qa) {
             document.getElementById('reportEmpName').textContent = empName;
             document.getElementById('reportDate').textContent = date;
-            document.getElementById('reportActions').textContent = actions;
-            document.getElementById('reportOutcomes').textContent = outcomes;
-            document.getElementById('reportPlan').textContent = plan;
-            document.getElementById('reportDau').textContent = dau;
-            document.getElementById('reportQa').textContent = qa;
+
+            // Handle metrics
+            const metricsDiv = document.getElementById('reportMetrics');
+            const metricsSection = document.getElementById('reportMetricsSection');
+            metricsDiv.innerHTML = '';
+            try {
+                const metrics = JSON.parse(metricsJson || '{}');
+                if (Object.keys(metrics).length > 0) {
+                    metricsSection.style.display = 'block';
+                    for (const [key, value] of Object.entries(metrics)) {
+                        const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        metricsDiv.innerHTML += `<div><strong>${formattedKey}:</strong> ${value}</div>`;
+                    }
+                } else {
+                    metricsSection.style.display = 'none';
+                }
+            } catch (e) {
+                metricsSection.style.display = 'none';
+            }
+
+            // Handle Also:
+            const alsoSection = document.getElementById('reportAlsoSection');
+            if (actions.trim() === '' || actions === 'No data') {
+                alsoSection.style.display = 'none';
+            } else {
+                alsoSection.style.display = 'block';
+                document.getElementById('reportAlso').textContent = actions;
+            }
+
+            document.getElementById('reportOutcomes').textContent = outcomes || 'No data';
+            document.getElementById('reportPlan').textContent = plan || 'No data';
+            document.getElementById('reportDau').textContent = dau || 'No data';
+            document.getElementById('reportQa').textContent = qa || 'No data';
             document.getElementById('reportModal').classList.add('active');
         }
 
