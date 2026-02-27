@@ -450,13 +450,15 @@
                         <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
                             <div class="form-group" style="flex: 1; min-width: 120px;">
                                 <label class="form-label">Check-in Time</label>
-                                <input type="time" class="form-control" name="check_in_time"
-                                    value="{% if today_attendance and today_attendance.check_in_time %}{{ today_attendance.check_in_time|time:'H:i' }}{% endif %}">
+                                <div class="form-control" style="background-color: var(--bg); color: var(--text-muted); padding: 0.75rem;">
+                                    {% if today_attendance and today_attendance.check_in_time %}{{ today_attendance.check_in_time|time:'H:i' }}{% else %}Not checked in{% endif %}
+                                </div>
                             </div>
                             <div class="form-group" style="flex: 1; min-width: 120px;">
                                 <label class="form-label">Check-out Time</label>
-                                <input type="time" class="form-control" name="check_out_time"
-                                    value="{% if today_attendance and today_attendance.check_out_time %}{{ today_attendance.check_out_time|time:'H:i' }}{% endif %}">
+                                <div class="form-control" style="background-color: var(--bg); color: var(--text-muted); padding: 0.75rem;">
+                                    {% if today_attendance and today_attendance.check_out_time %}{{ today_attendance.check_out_time|time:'H:i' }}{% else %}Not checked out{% endif %}
+                                </div>
                             </div>
                         </div>
 
@@ -473,7 +475,10 @@
                         <div class="actions-group">
                             {% if already_marked %}
                             <button type="submit" name="status" value="{{ today_attendance.status }}"
-                                class="btn btn-primary" style="width: 100%;">Update Attendance</button>
+                                class="btn btn-primary" style="flex: 1;">Update Extra Days/Status</button>
+                            {% if not today_attendance.check_out_time and today_attendance.status != 'Absent' and today_attendance.status != 'Leave' %}
+                            <button type="submit" name="check_out" value="1" class="btn btn-warning" style="flex: 1;">Check Out</button>
+                            {% endif %}
                             {% else %}
                             <button type="submit" name="status" value="Present" class="btn btn-success"
                                 style="flex: 1;">Mark Present</button>
@@ -560,6 +565,11 @@
                                 <label class="form-label">Hours mentored</label>
                                 <input type="number" name="hours_mentored" class="form-control"
                                     value="{{ report.team_metrics.hours_mentored|default:0 }}">
+                            </div>
+                            <div>
+                                <label class="form-label">New features added</label>
+                                <input type="number" name="new_features_added" class="form-control"
+                                    value="{{ report.team_metrics.new_features_added|default:0 }}">
                             </div>
                         </div>
                         {% else %}

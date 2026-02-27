@@ -73,11 +73,21 @@ def mark_attendance(request):
                 metrics['skills_added'] = request.POST.get('skills_added', 0)
                 metrics['students_mentored'] = request.POST.get('students_mentored', 0)
                 metrics['hours_mentored'] = request.POST.get('hours_mentored', 0)
+                metrics['new_features_added'] = request.POST.get('new_features_added', 0)
 
             report.team_metrics = metrics
             report.save()
 
             messages.success(request, "Daily report saved.")
+            return redirect("mark_attendance")
+
+        # ✅ CHECK OUT
+        if "check_out" in request.POST:
+            if already_marked:
+                today_attendance = Attendance.objects.get(employee=request.user, date=today)
+                today_attendance.check_out_time = timezone.localtime().time()
+                today_attendance.save()
+                messages.success(request, "Checked out successfully!")
             return redirect("mark_attendance")
 
         # ✅ UPDATE TIMES OR MARK ATTENDANCE
@@ -88,8 +98,6 @@ def mark_attendance(request):
                 messages.error(request, "Invalid attendance status.")
                 return redirect("mark_attendance")
 
-            check_in_time = request.POST.get("check_in_time")
-            check_out_time = request.POST.get("check_out_time")
             extra_days = request.POST.get("extra_days") == "on"
 
             # If already marked, update the record instead of creating new one
@@ -99,18 +107,17 @@ def mark_attendance(request):
                     date=today
                 )
                 today_attendance.status = selected_status
-                today_attendance.check_in_time = check_in_time if check_in_time else None
-                today_attendance.check_out_time = check_out_time if check_out_time else None
                 today_attendance.extra_days = extra_days
                 today_attendance.save()
                 messages.success(request, "Attendance updated successfully!")
             else:
+                check_in_time = timezone.localtime().time() if selected_status in ["Present", "Half Day", "WFH"] else None
                 Attendance.objects.create(
                     employee=request.user,
                     date=today,
                     status=selected_status,
-                    check_in_time=check_in_time if check_in_time else None,
-                    check_out_time=check_out_time if check_out_time else None,
+                    check_in_time=check_in_time,
+                    check_out_time=None,
                     extra_days=extra_days
                 )
                 messages.success(

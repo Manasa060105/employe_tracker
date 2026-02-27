@@ -793,7 +793,7 @@
                         html += `</div>`;
                         metricsDiv.innerHTML = html;
 
-                    } else if (metrics.hasOwnProperty('lessons_completed') || metrics.hasOwnProperty('skills_added')) {
+                    } else if (metrics.hasOwnProperty('lessons_completed') || metrics.hasOwnProperty('skills_added') || metrics.hasOwnProperty('new_features_added')) {
                         // Tech and Development Formatting
                         metricsDiv.style.gridTemplateColumns = '1fr 1fr';
                         let html = '';
@@ -801,6 +801,7 @@
                         if (metrics.skills_added !== undefined) html += `<div><strong>Skills added:</strong> ${metrics.skills_added}</div>`;
                         if (metrics.students_mentored !== undefined) html += `<div><strong>Students mentored:</strong> ${metrics.students_mentored}</div>`;
                         if (metrics.hours_mentored !== undefined) html += `<div><strong>Hours mentored:</strong> ${metrics.hours_mentored}</div>`;
+                        if (metrics.new_features_added !== undefined) html += `<div><strong>New features added:</strong> ${metrics.new_features_added}</div>`;
                         metricsDiv.innerHTML = html;
                     } else {
                         // Fallback
